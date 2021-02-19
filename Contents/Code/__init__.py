@@ -4,12 +4,10 @@
 JSONMovieAgent
 """
 
-from utils import Mediafile
-import logging
+from utils import Mediafile, open_file
+from logging import PlexLogAdapter as log
 import os
 import json
-
-log = logging.PlexLogAdapter
 
 # PLEX API
 preferences = Prefs
@@ -57,11 +55,6 @@ class JSONAgent(PlexAgent):
             log.info('Agent debug logging is disabled!')
 
         mediafile = Mediafile(media.items[0].parts[0].file)
-        log.debug('full path: {name}'.format(name=mediafile.path))
-        log.debug('folder path: {name}'.format(name=mediafile.folder))
-        log.debug('media file: {name}'.format(name=mediafile.filename))
-        log.debug('file name: {name}'.format(name=mediafile.file))
-        log.debug('file ext: {name}'.format(name=mediafile.ext))
 
         json_path = os.path.join(mediafile.folder, '{file}.json'.format(file = mediafile.filename))
         log.debug('loading JSON: {name}'.format(name=json_path))
