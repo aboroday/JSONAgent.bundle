@@ -4,7 +4,7 @@
 JSONMovieAgent
 """
 
-from utils import Mediafile, open_file
+from utils import Mediafile, open_file, load_json_metadata
 from logging import PlexLogAdapter as log
 import os
 import json
@@ -55,18 +55,8 @@ class JSONAgent(PlexAgent):
             log.info('Agent debug logging is disabled!')
 
         mediafile = Mediafile(media.items[0].parts[0].file)
+        json_metadata = load_json_metadata(mediafile)
 
-        json_path = os.path.join(mediafile.folder, '{file}.json'.format(file = mediafile.filename))
-        log.debug('loading JSON: {name}'.format(name=json_path))
-
-        if os.path.exists(json_path):
-            try:
-                json_string = load_file(json_path)
-                log.debug('JSON read:  {name}'.format(name=json_string))
-                json_metadata = json.loads(json_string)
-                log.debug('Metadata loaded from JSON:  {name}'.format(name=json_metadata))
-            except Exception as e:
-                log.debug('Metadata load failed:  {name}'.format(name=e))
         # Title
         try:
             media.name = json_metadata.get('title')
@@ -119,7 +109,7 @@ class JSONAgent(PlexAgent):
 
     # update function
     def update(self, metadata, media, lang):
-        log.debug('# Invoking search function')
+        log.debug('# Invoking update function')
 
         log.info('{plugin} Version: {number}'.format(
             plugin=self.name, number=self.ver))
@@ -132,23 +122,7 @@ class JSONAgent(PlexAgent):
             log.info('Agent debug logging is disabled!')
 
         mediafile = Mediafile(media.items[0].parts[0].file)
-        log.debug('full path: {name}'.format(name=mediafile.path))
-        log.debug('folder path: {name}'.format(name=mediafile.folder))
-        log.debug('media file: {name}'.format(name=mediafile.filename))
-        log.debug('file name: {name}'.format(name=mediafile.file))
-        log.debug('file ext: {name}'.format(name=mediafile.ext))
-
-        json_path = os.path.join(mediafile.folder, '{file}.json'.format(file=mediafile.filename))
-        log.debug('loading JSON: {name}'.format(name=json_path))
-
-        if os.path.exists(json_path):
-            try:
-                json_string = load_file(json_path)
-                log.debug('JSON read:  {name}'.format(name=json_string))
-                json_metadata = json.loads(json_string)
-                log.debug('Metadata loaded from JSON:  {name}'.format(name=json_metadata))
-            except Exception as e:
-                log.debug('Metadata load failed:  {name}'.format(name=e))
+        json_metadata = load_json_metadata(mediafile)
 
         log.debug('metadata: {name}'.format(name=metadata))
 

@@ -1,5 +1,22 @@
 import os
+import json
 from logging import PlexLogAdapter as log
+
+
+def load_json_metadata(mediafile):
+    json_path = os.path.join(mediafile.folder, '{file}.json'.format(file=mediafile.filename))
+    log.debug('loading JSON: {name}'.format(name=json_path))
+    try:
+        json_string = open_file(json_path)
+        log.debug('JSON read:  {name}'.format(name=json_string))
+        json_metadata = json.loads(json_string)
+        log.debug('Metadata loaded from JSON:  {name}'.format(name=json_metadata))
+    except Exception as e:
+        log.debug('Metadata load failed:  {name}'.format(name=e))
+        raise
+    return json_metadata
+
+
 
 def open_file(path, binary=True):
     if os.path.exists(path):
@@ -10,6 +27,7 @@ def open_file(path, binary=True):
         except Exception as e:
             log.debug('Could not open the file {name}:  {exc}'.format(name=path, exc=e))
             raise
+
 
 class Mediafile:
     """
