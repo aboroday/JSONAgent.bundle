@@ -70,13 +70,6 @@ class JSONAgent(PlexAgent):
         except:
             log.info('WARNING: No \'title_sort\' tag in JSON.')
             pass
-        # Year
-        try:
-            media.year = int(json_metadata.get('year').strip())
-            log.debug('Reading year tag: {year}'.format(year=media.year))
-        except:
-            log.debug('WARNING: No \'year\' tag in JSON.')
-            pass
         # ID
         try:
             id = json_metadata.get('id').strip()
@@ -102,7 +95,6 @@ class JSONAgent(PlexAgent):
         try:
             log.info('Found movie information in JSON file:'
                      ' title = {media.name},'
-                     ' year = {media.year},'
                      ' id = {media.id}'.format(media=media))
         except:
             pass
