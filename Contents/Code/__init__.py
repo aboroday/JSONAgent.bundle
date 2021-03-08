@@ -6,8 +6,6 @@ JSONMovieAgent
 
 from utils import Mediafile, open_file, load_json_metadata
 from logging import PlexLogAdapter as log
-import os
-import json
 
 # PLEX API
 preferences = Prefs
@@ -64,12 +62,6 @@ class JSONAgent(PlexAgent):
             log.info('ERROR: No \'title\' tag in JSON. Aborting!')
             log.debug('Exception: {name}'.format(name=e))
             return
-        # Sort Title
-        try:
-            media.title_sort = json_metadata.get('title_sort')
-        except:
-            log.info('WARNING: No \'title_sort\' tag in JSON.')
-            pass
         # ID
         try:
             id = json_metadata.get('id').strip()
@@ -119,19 +111,87 @@ class JSONAgent(PlexAgent):
         log.debug('metadata: {name}'.format(name=metadata))
 
         # Title
-        try:
+        if json_metadata.get('title'):
+            log.debug('title found: {name}'.format(name=json_metadata.get('title')))
             metadata.title = json_metadata.get('title')
-        except Exception as e:
+        else:
             log.info('ERROR: No \'title\' tag in JSON. Aborting!')
-            log.debug('Exception: {name}'.format(name=e))
             return
+
         # Year
-        try:
-            metadata.year = int(json_metadata.get('year').strip())
-            log.debug('Reading year tag: {year}'.format(year=metadata.year))
-        except Exception as e:
-            log.debug('WARNING: No \'year\' tag in JSON.')
-            log.debug('Exception: {name}'.format(name=e))
-            pass
+        if json_metadata.get('year'):
+            log.debug('year found: {name}'.format(name=json_metadata.get('year')))
+            metadata.year = int(json_metadata.get('year'))
+
+        # Summary
+        if json_metadata.get('summary'):
+            log.debug('summary found: {name}'.format(name=json_metadata.get('summary')))
+            metadata.summary = json_metadata.get('summary')
+
+        # Studio
+        if json_metadata.get('studio'):
+            log.debug('studio found: {name}'.format(name=json_metadata.get('studio')))
+            metadata.studio = json_metadata.get('studio')
+
+        # Genre
+        if json_metadata.get('genre'):
+            try:
+                metadata.genres.clear()
+                for genre in json_metadata.get('genre'):
+                    log.debug('genre found: {name}'.format(name=genre))
+                    metadata.genres.add(genre)
+            except:
+                pass
+
+        # Country.
+        if json_metadata.get('country'):
+            try:
+                metadata.countries.clear()
+                for country in json_metadata.get('country'):
+                    country = country.replace('United States of America', 'USA')
+                    log.debug('country found: {name}'.format(name=country))
+                    metadata.countries.add(country)
+            except:
+                pass
+
+        # Directors.
+        if json_metadata.get('director'):
+            try:
+                metadata.directors.clear()
+                for movie_director in json_metadata.get('director'):
+                    director = metadata.directors.new()
+                    log.debug('director found: {name}'.format(name=movie_director))
+                    director.name = movie_director
+            except:
+                pass
+
+        # Writers.
+        if json_metadata.get('writer'):
+            try:
+                metadata.writers.clear()
+                for movie_writer in json_metadata.get('writer'):
+                    writer = metadata.writers.new()
+                    log.debug('writer found: {name}'.format(name=movie_writer))
+                    writer.name = movie_writer
+            except:
+                pass
+
+        # Tagline.
+        if json_metadata.get('tagline'):
+            log.debug('tagline found: {name}'.format(name=json_metadata.get('tagline')))
+            metadata.tagline = json_metadata.get('tagline')
+
+        # Actors.
+        if json_metadata.get('actor'):
+            try:
+                metadata.roles.clear()
+                for movie_role in json_metadata.get('actor'):
+                    role = metadata.roles.new()
+                    if movie_role.get('role'):
+                        role.role = movie_role.get('role')
+                    role.name = movie_role.get('name')
+                    log.debug('actor found: {name}, role found: {role}'.format(name=role.name, role=role.role))
+            except:
+                pass
 
         return metadata

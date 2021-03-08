@@ -1,0 +1,21 @@
+{
+  "title": "Example movie title",
+  "year": "2015",
+  "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  "studio": "Studio Name",
+  "genre": ["Genre 1", "Genre 2"],
+  "country": ["Country 1", "Country 2"],
+  "director": ["Example Director"],
+  "writer": ["Example Writer 1", "Example Writer 2"],
+  "tagline": "Example tagline",
+  "actor": [
+    {
+      "name": "Actor 1 Name",
+      "role": "Actor 1 Role"
+    },
+    {
+      "name": "Actor 2 Name",
+      "role": "Actor 2 Role"
+    }
+    ]
+}
